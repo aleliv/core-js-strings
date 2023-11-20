@@ -40,9 +40,11 @@ function getStringLength(value) {
  *   isString('test') => true
  *   isString(new String('test')) => true
  */
-function isString(/* value */) {
-  // return typeof value === 'string';
-  throw new Error('Not implemented');
+function isString(value) {
+  if (value === undefined || value === null) {
+    return false;
+  }
+  return typeof value.valueOf() === 'string';
 }
 
 /**
@@ -153,8 +155,14 @@ function repeatString(str, times) {
  *   removeFirstOccurrences('I like legends', 'end') => 'I like legs'.
  *   removeFirstOccurrences('ABABAB', 'BA') => 'ABAB'.
  */
-function removeFirstOccurrences(/* str, value */) {
-  throw new Error('Not implemented');
+function removeFirstOccurrences(str, value) {
+  const indx = str.indexOf(value);
+  if (indx < 0) {
+    return str;
+  }
+  const first = str.slice(0, indx);
+  const second = str.slice(indx + value.length, str.length);
+  return first.concat(second);
 }
 
 /**
@@ -169,8 +177,14 @@ function removeFirstOccurrences(/* str, value */) {
  *   removeLastOccurrences('I like legends', 'end') => 'I like legs'.
  *   removeLastOccurrences('ABABAB', 'BA') => 'ABAB'.
  */
-function removeLastOccurrences(/* str, value */) {
-  throw new Error('Not implemented');
+function removeLastOccurrences(str, value) {
+  const indx = str.lastIndexOf(value);
+  if (indx < 0) {
+    return str;
+  }
+  const first = str.slice(0, indx);
+  const second = str.slice(indx + value.length, str.length);
+  return first.concat(second);
 }
 
 /**
@@ -240,8 +254,10 @@ function endsWith(str, substr) {
  *   formatTime(0, 45) => "00:45"
  *   formatTime(0, 0) => "00:00"
  */
-function formatTime(/* minutes, seconds */) {
-  throw new Error('Not implemented');
+function formatTime(minutes, seconds) {
+  const min = String(minutes).padStart(2, '0');
+  const sec = String(seconds).padStart(2, '0');
+  return min.concat(':', sec);
 }
 
 /**
@@ -328,12 +344,15 @@ function countVowels(str) {
  *   isPalindrome('apple') => false
  *   isPalindrome('No lemon, no melon') => true
  */
-function isPalindrome(/* str */) {
-  // const normal = str.split('').join('');
-  // const reversed = str.split('').reverse().join('');
-  // console.log(normal, reversed);
-  // return normal === reversed;
-  throw new Error('Not implemented');
+function isPalindrome(str) {
+  const mod = str
+    .toLowerCase()
+    .replaceAll(' ', '')
+    .replaceAll(',', '')
+    .replaceAll('!', '')
+    .replaceAll('?', '');
+  const reversed = mod.split('').reverse().join('');
+  return mod === reversed;
 }
 
 /**
@@ -348,21 +367,12 @@ function isPalindrome(/* str */) {
  *   findLongestWord('A long and winding road') => 'winding'
  *   findLongestWord('No words here') => 'words'
  */
-function findLongestWord(/* sentence */) {
-  // let length = 0;
-  // let indx = -1;
-  // console.log(sentence.split(' '));
-  // const splt = sentence.split(' ');
-  // splt.forEach((element) => {
-  //   console.log(element.length);
-  //   if (element.length > length) {
-  //     length = element.length;
-  //     indx += 1;
-  //   }
-  // });
-  // console.log(length, indx, splt[indx]);
-  // return splt[indx];
-  throw new Error('Not implemented');
+function findLongestWord(sentence) {
+  const arr = sentence.split(' ');
+  arr.sort(function compare(a, b) {
+    return b.length - a.length;
+  });
+  return arr[0];
 }
 
 /**
@@ -435,8 +445,8 @@ function getStringFromTemplate(firstName, lastName) {
  *   extractNameFromTemplate('Hello, John Doe!') => 'John Doe'
  *   extractNameFromTemplate('Hello, Chuck Norris!') => 'Chuck Norris'
  */
-function extractNameFromTemplate(/* value */) {
-  throw new Error('Not implemented');
+function extractNameFromTemplate(value) {
+  return value.slice(value.indexOf(' ') + 1, value.length - 1);
 }
 
 /**
@@ -533,8 +543,36 @@ function encodeToRot13(str) {
  *   'Q♠' => 50
  *   'K♠' => 51
  */
-function getCardId(/* value */) {
-  throw new Error('Not implemented');
+function getCardId(value) {
+  const symbols = '♣♦♥♠';
+  const numbers = [
+    'A',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    'J',
+    'Q',
+    'K',
+  ];
+  const symbol = value[value.length - 1];
+  const number = value.slice(0, -1);
+  const row = symbols.indexOf(symbol);
+  const place = numbers.indexOf(number);
+  let res = place;
+  if (row === 1) {
+    res = 13 + place;
+  } else if (row === 2) {
+    res = 26 + place;
+  } else if (row === 3) {
+    res = 39 + place;
+  }
+  return res;
 }
 
 module.exports = {
